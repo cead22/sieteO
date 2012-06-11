@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" id="viewport" content="width=device-width,height=device-height,initial-scale=1.0,user-scalable=no">
     <script src="json2.js" type="text/javascript"></script>
+	<script src="http://code.jquery.com/jquery-1.7.2.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="cordova-1.7.0.js" type="text/javascript"></script>
     <script type="text/javascript">
 
@@ -849,13 +850,74 @@
                 navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
             }, {limit:2});
         }
+		function send() {
+			// clear and hide error div
+			$("#error").hide();
+			
+			//  hide success div
+			$("#success").hide();
+			
+			// validate
+			if (! $("#nombre").val() || $("#nombre").val() === '' ) {
+				$("#error").html("Debe indicar nombre").show();
+			}
+			
+			else {		
+				// send request
+				$.ajax({
+					url: "http://venz.salsalabs.com/save",
+					type: 'GET',
+					data: {
+						cedula: $("#cedula").val(),
+						nombre: $("#nombre").val(),
+						telef_cel: $("#telef_cel").val(),
+						Email: $("#Email").val()
+					},
+					success: function (msg) {
+						// show success info
+						$('#success').html("Contacto Guardado").show();
+					},
+					error: function (msg) {
+						$('#error').html("Error intente de nuevo").show();
+					}
+				});
+			}
+		}
+		</script>
+		<title>Cordova API Sample</title>
+	</head>
+	<body onload="init()" onunload="unload()">
+		<form>
+			<h5 id="error" style="color:red">  </h5>
+			<h5 id="success" style="color:green">  </h5>
 
-    </script>
-    <title>Cordova API Sample</title>
-  </head>
-  <body onload="init()" onunload="unload()">
+				<input type="hidden" name="object" value="supporter"/>
+				<input type="hidden" name="organization_KEY" value="9058" />
+
+				<label for="cedula">Cedula</label> <br/>
+				<input type="text" name="cedula" value="" id="cedula" maxlength="8" />
+
+			<p>
+				<label for="nombre">Nombre</label> <br/>
+				<input type="text" name="nombre" value="" id="nombre" />
+
+			</p>
+			<p>
+				<label for="celular">Celular</label> <br/>
+				<input name="telef_cel" id="telef_cel" maxlength="11" type="text" />
+
+			</p>
+			<p>
+				<label for="email">Email</label> <br/>
+				<input name="Email" id="Email" type="text" />
+
+			</p>
+			<input type="button" value="Enviar" onclick="send();" />
+		</form>
+
+
   
-    <h3>window.device</h3>
+    <!-- <h3>window.device</h3>
     <p id="window.device.platform">[window.device.platform]</p>
     <p id="window.device.version">[window.device.version]</p>
     <p id="window.device.uuid">[window.device.uuid]</p>
@@ -952,7 +1014,7 @@
     <p id="supportedVideoModes">[supportedVideoModes]</p>
     <input type="button" value="Audio" onclick="startAudioCapture();return false;" />
     <input type="button" value="Image" onclick="startImageCapture();return false;" />
-    <input type="button" value="Video" onclick="startVideoCapture();return false;" />
+    <input type="button" value="Video" onclick="startVideoCapture();return false;" /> -->
 
   </body>
 </html>
